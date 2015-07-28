@@ -1,13 +1,13 @@
 static char g_szBuffer[256];
 
-stock void PrintColorChat( int target, int author, const char[] szMsg, any ... )
+stock void PrintColorChat( int target, int author, const char[] szMsg, any...)
 {
 	VFormat( g_szBuffer, sizeof( g_szBuffer ), szMsg, 4 );
 	
 	SendColorMessage( target, author, g_szBuffer );
 }
 
-stock void PrintColorChatAll( int author, bool bAllowHide, const char[] szMsg, any ... )
+stock void PrintColorChatAll( int author, bool bAllowHide, const char[] szMsg, any...)
 {
 	VFormat( g_szBuffer, sizeof( g_szBuffer ), szMsg, 4 );
 	
@@ -74,57 +74,70 @@ stock void ShowKeyHintText( int client, int target )
 	
 	if ( hMsg != null )
 	{
-		static char szTime[SIZE_TIME_RECORDS];
+		static char szTime[TIME_SIZE_DEF];
 		static char szText[120];
+		
+		static int run;
+		static int style;
+		static int mode;
+		run = g_iClientRun[target];
+		style = g_iClientStyle[target];
+		mode = g_iClientMode[target];
 		
 		if ( IsFakeClient( target ) ) 
 		{
 #if defined RECORD
-			FormatSeconds( g_flMapBestTime[ g_iClientRun[target] ][ g_iClientStyle[target] ], szTime, sizeof( szTime ) );
+			FormatSeconds( g_flMapBestTime[run][style][mode], szTime );
 			
-			FormatEx( szText, sizeof( szText ), "Name: %s\nTime: %s", g_szRecName[ g_iClientRun[target] ][ g_iClientStyle[target] ], szTime );
+			FormatEx( szText, sizeof( szText ), "Name: %s\nTime: %s", g_szRecName[run][style][mode], szTime );
 #else
 			FormatEx( szText, sizeof( szText ), "I am a bot! :)" );
 #endif
 		}
 		else
 		{
-			if ( g_flClientBestTime[target][ g_iClientRun[target] ][ g_iClientStyle[target] ] != TIME_INVALID )
+			if ( g_flClientBestTime[target][run][style][mode] != TIME_INVALID )
 			{
-				FormatSeconds( g_flClientBestTime[target][ g_iClientRun[target] ][ g_iClientStyle[target] ], szTime, sizeof( szTime ) );
+				FormatSeconds( g_flClientBestTime[target][run][style][mode], szTime );
 			}
 			else FormatEx( szTime, sizeof( szTime ), "N/A" );
 			
 			
+			static char szStylePostFix[STYLEPOSTFIX_LENGTH];
+			GetStylePostfix( g_iClientMode[target], szStylePostFix );
+			
 			if ( g_iClientState[target] != STATE_START )
 			{
-				if ( g_iClientStyle[client] == STYLE_W || g_iClientStyle[client] == STYLE_A_D )
+				if ( style == STYLE_W || style == STYLE_A_D )
 				{
-					FormatEx( szText, sizeof( szText ), "Jumps: %i\n \nStyle: %s\nPB: %s\n%s",
-						g_nClientJumpCount[target],
-						g_szStyleName[NAME_LONG][ g_iClientStyle[target] ], // Show our style.
+					FormatEx( szText, sizeof( szText ), "Jumps: %i\n \nStyle: %s%s\nPB: %s\n%s",
+						g_nClientJumps[target],
+						g_szStyleName[NAME_LONG][style], // Show our style.
+						szStylePostFix, // Don't forget postfix
 						szTime,
-						( g_bIsClientPractising[target] ? "(Practice Mode)" : "" ) ); // Have a practice mode warning for players!
+						( g_bClientPractising[target] ? "(Practice Mode)" : "" ) ); // Have a practice mode warning for players!
 				}
 				else
 				{
 					// "Strafes: XXXXXCL Sync: 100.0CL Sync: 100.0CR Sync: 100.0CJumps: XXXXC CStyle: Real HSWCPB: 00:00:00.00C(Practice Mode)"
-					FormatEx( szText, sizeof( szText ), "Strafes: %i\nL Sync: %.1f\nR Sync: %.1f\nJumps: %i\n \nStyle: %s\nPB: %s\n%s",
-						g_nClientStrafeCount[target],
+					FormatEx( szText, sizeof( szText ), "Strafes: %i\nL Sync: %3.1f\nR Sync: %3.1f\nJumps: %i\n \nStyle: %s%s\nPB: %s\n%s",
+						g_nClientStrafes[target],
 						g_flClientSync[target][STRAFE_LEFT] * 100.0, // Left Sync
 						g_flClientSync[target][STRAFE_RIGHT] * 100.0, // Right Sync
-						g_nClientJumpCount[target],
-						g_szStyleName[NAME_LONG][ g_iClientStyle[target] ],
+						g_nClientJumps[target],
+						g_szStyleName[NAME_LONG][style],
+						szStylePostFix,
 						szTime,
-						( g_bIsClientPractising[target] ? "(Practice Mode)" : "" ) );
+						( g_bClientPractising[target] ? "(Practice Mode)" : "" ) );
 				}
 			}
 			else
 			{
-				FormatEx( szText, sizeof( szText ), "Style: %s\nPB: %s\n%s",
-					g_szStyleName[NAME_LONG][ g_iClientStyle[target] ],
+				FormatEx( szText, sizeof( szText ), "Style: %s%s\nPB: %s\n%s",
+					g_szStyleName[NAME_LONG][style],
+					szStylePostFix,
 					szTime,
-					( g_bIsClientPractising[target] ? "(Practice Mode)" : "" ) );
+					( g_bClientPractising[target] ? "(Practice Mode)" : "" ) );
 			}
 		}
 		

@@ -4,6 +4,48 @@ Ignore me!
 Update log:
 ------------
 -------------
+	v1.5
+-------------
+	- New database structure.
+		* Old databases will not work and must be deleted.
+	
+	- New recording file structure.
+		* Old recordings will not work!
+		* In case of database dying on us, we now include ALL THE DATA in the file header.
+	
+	- Changed cvar prefix to timer_ from sm_!
+	
+	- Added checkpoint zones!
+		* A standard checkpoint: Allows players to compare their time to the record time.
+	
+	- You can now spawn as many freestyle, block and checkpoint zones as you please!
+		* Less, the better for performance, of course.
+	
+	- Added modes. These modes are autobhop, scroll and velcap.
+		* Each mode is their own separate category with own records and ranks.
+		* Autobhop is just like normal, ezhop and everything.
+		* Scroll and velcap both have no ezhop and have legit aa.
+	
+	- Added 'timer_def_airaccelerate' and 'timer_scroll_airaccelerate' cvars.
+		* timer_def_airaccelerate defines what is the normal (autobhop, non-legit) sv_airaccelerate. (def. 1000)
+		* timer_scroll_airaccelerate defines what is the scroll/velcap-mode sv_airaccelerate. (def. 100)
+	
+	- Better record text.
+		* Time is now formatted MM:SS:SS(S).
+		* Every time player joins the server or breaks pb/wr, we will print said player's rank.
+	
+	- Fixes and improvements
+		* Records now store run's tickrate. Makes sure it's compatible with the server.
+		* We now show a sprite in zone building menu where the zone would start.
+		* Fixed zones not spawning correctly. (CS:GO)
+		* Fixed hint text formatting and added more colors. (CS:GO)
+		* Added cvars timer_maxbots, timer_fps_style, timer_allow_mode_auto, timer_allow_mode_scroll, timer_allow_mode_velcap, timer_def_mode.
+		* We now only save player data when the player disconnects.
+		* Directory names are now separated from the rest of the plugin and use lowercase letters.
+		* Made sure we capture the start and the end frames into the recording.
+		* Cleaned up and changed A LOT of code.
+
+-------------
 	v1.4.6
 -------------
 	- Added A/D-Only style.
@@ -50,7 +92,7 @@ Update log:
 		* Bots and players go to separate teams.
 		* HUD no longer shows for spectators that are in free roaming mode.
 		* Zone mins and maxs are now real mins and maxs. They are corrected on creation.
-			* This allowed the simplification of function IsInsideZone()
+			* This allowed the simplification of function IsInsideBounds()
 				* Less computing time.
 		* Anti-cheat now prints a warning to the console if we found a cheating player.
 		* Improved and fixed record display.

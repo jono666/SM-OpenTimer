@@ -1,19 +1,19 @@
 public Action Command_Version( int client, int args )
 {
-	if ( client == INVALID_INDEX ) return Plugin_Handled;
+	if ( !client ) return Plugin_Handled;
 	
-	PRINTCHAT( client, client, CHAT_PREFIX ... "Running version \x03" ... PLUGIN_VERSION...CLR_TEXT..." made by \x03" ... PLUGIN_AUTHOR...CLR_TEXT..."." );
+	PRINTCHAT( client, client, CHAT_PREFIX..."Running version "...CLR_TEAM...""...PLUGIN_VERSION...CLR_TEXT..." made by "...CLR_TEAM...""...PLUGIN_AUTHOR...CLR_TEXT..."." );
 	
 	return Plugin_Handled;
 }
 
 public Action Command_Help( int client, int args )
 {
-	if ( client == INVALID_INDEX ) return Plugin_Handled;
+	if ( !client ) return Plugin_Handled;
 	
 	if ( IsSpamming( client ) )
 	{
-		PRINTCHAT( client, client, CHAT_PREFIX ... "Please wait before using this command again, thanks." );
+		PRINTCHAT( client, client, CHAT_PREFIX..."Please wait before using this command again, thanks." );
 		return Plugin_Handled;
 	}
 	
@@ -36,7 +36,7 @@ public Action Command_Help( int client, int args )
 	PrintToConsole( client, "!credits" );
 	
 	PrintToConsole( client, ">> RECORDS" );
-	PrintToConsole( client, "!wr/!records/!times - Show top 5 times." );
+	PrintToConsole( client, "!wr/!records/!times <type> - Show records! Max. %i times.", RECORDS_PRINT_MAX );
 	PrintToConsole( client, "!printrecords <type> - Shows a detailed version of records. (m/b1/b2 n/w/sw/rhsw/hsw/vel) Max. %i times.", RECORDS_PRINT_MAX );
 	
 	PrintToConsole( client, ">> PRACTICE" );
@@ -57,42 +57,31 @@ public Action Command_Help( int client, int args )
 #endif
 
 	PrintToConsole( client, ">> ADMIN" );
-	PrintToConsole( client, "!zone/!zones/!zonemenu - Zone menu." );
+	PrintToConsole( client, "!zone/!zones/!zonemenu - Main zone menu." );
 	PrintToConsole( client, "!startzone - Start a zone." );
 	PrintToConsole( client, "!endzone - End the zone you were building." );
+	PrintToConsole( client, "!cancelzone - Stops building a zone without saving it." );
 	PrintToConsole( client, "!deletezone - Delete a specific zone." );
+	PrintToConsole( client, "!deletezone2 - Delete a freestyle/block zone." );
+	PrintToConsole( client, "!deletecp - Delete a checkpoint zone." );
+	PrintToConsole( client, "!zoneedit - Choose a zone which permissions to edit." );
+	PrintToConsole( client, "!selectcurzone - Choose a zone you are currently in to edit its permissions." );
+	PrintToConsole( client, "!zonepermissions - Edit freestyle/block zone permissions." );
+	PrintToConsole( client, "!removerecords - Gives the ability to remove records in certain ways." );
 	PrintToConsole( client, "--------------------" );
 	
-	PRINTCHAT( client, client, CHAT_PREFIX ... "Printed all used commands to your console!" );
+	PRINTCHAT( client, client, CHAT_PREFIX..."Printed all used commands to your console!" );
 	
 	return Plugin_Handled;
 }
 
-#if defined ANTI_DOUBLESTEP
-	public Action Command_Doublestep( int client, int args )
-	{
-		if ( client == INVALID_INDEX ) return Plugin_Handled;
-		
-		if ( IsSpamming( client ) )
-		{
-			PRINTCHAT( client, client, CHAT_PREFIX ... "Please wait before using this command again, thanks." );
-			return Plugin_Handled;
-		}
-		
-		
-		ShowMOTDPanel( client, "Doublestep Info", "For players that use client-side autobhop and suffer from doublestepping (non-perfect jumps):\n\nBind your hold key to \'+ds\' to disable doublestepping completely.", MOTDPANEL_TYPE_TEXT );
-		
-		return Plugin_Handled;
-	}
-#endif
-
 public Action Command_Spawn( int client, int args )
 {
-	if ( client == INVALID_INDEX ) return Plugin_Handled;
+	if ( !client ) return Plugin_Handled;
 	
 	if ( IsSpamming( client ) )
 	{
-		PRINTCHAT( client, client, CHAT_PREFIX ... "Please wait before using this command again, thanks." );
+		PRINTCHAT( client, client, CHAT_PREFIX..."Please wait before using this command again, thanks." );
 		return Plugin_Handled;
 	}
 	
@@ -116,7 +105,7 @@ public Action Command_Spawn( int client, int args )
 
 public Action Command_Spectate( int client, int args )
 {
-	if ( client == INVALID_INDEX ) return Plugin_Handled;
+	if ( !client ) return Plugin_Handled;
 	
 	
 	if ( args == 0 ) ChangeClientTeam( client, CS_TEAM_SPECTATOR );
@@ -133,7 +122,7 @@ public Action Command_Spectate( int client, int args )
 		if ( target < 1 || target > MaxClients || !IsClientInGame( target ) || !IsPlayerAlive( client ) )
 		{
 			ChangeClientTeam( client, CS_TEAM_SPECTATOR );
-			PRINTCHAT( client, client, CHAT_PREFIX ... "Couldn't find the player you were looking for." );
+			PRINTCHAT( client, client, CHAT_PREFIX..."Couldn't find the player you were looking for." );
 			
 			return Plugin_Handled;
 		}
@@ -150,7 +139,7 @@ public Action Command_Spectate( int client, int args )
 
 public Action Command_FieldOfView( int client, int args )
 {
-	if ( client == INVALID_INDEX ) return Plugin_Handled;
+	if ( !client ) return Plugin_Handled;
 	
 	
 	if ( args == 1 )
@@ -163,117 +152,122 @@ public Action Command_FieldOfView( int client, int args )
 		
 		if ( fov > 150 )
 		{
-			PRINTCHAT( client, client, CHAT_PREFIX ... "Your desired field of view is too damn high! Max. 150" );	
+			PRINTCHAT( client, client, CHAT_PREFIX..."Your desired field of view is too damn high! Max. 150" );	
 			return Plugin_Handled;
 		}
 		else if ( fov < 70 )
 		{
-			PRINTCHAT( client, client, CHAT_PREFIX ... "Your desired field of view is too low! Min. 70" );
+			PRINTCHAT( client, client, CHAT_PREFIX..."Your desired field of view is too low! Min. 70" );
 			return Plugin_Handled;
 		}
 		
 		
-		PRINTCHAT( client, client, CHAT_PREFIX ... "Your field of view is now \x03%i"...CLR_TEXT..."!", fov );
+		PRINTCHAT( client, client, CHAT_PREFIX..."Your field of view is now "...CLR_TEAM..."%i"...CLR_TEXT..."!", fov );
 	
 		SetClientFOV( client, fov );
 		g_iClientFOV[client] = fov;
-		
-		
-		if ( !DB_SaveClientData( client ) )
-			PRINTCHAT( client, client, CHAT_PREFIX ... "Couldn't save your option to database!" );
 	}
 	else
-		PRINTCHAT( client, client, CHAT_PREFIX ... "Usage: sm_fov <number> (value between 70 and 150)" );
+		PRINTCHAT( client, client, CHAT_PREFIX..."Usage: sm_fov <number> (value between 70 and 150)" );
 	
 	return Plugin_Handled;
 }
 
 public Action Command_RecordsMenu( int client, int args )
 {
-	if ( client == INVALID_INDEX ) return Plugin_Handled;
-	
-	if ( IsSpamming( client ) )
-	{
-		PRINTCHAT( client, client, CHAT_PREFIX ... "Please wait before using this command again, thanks." );
-		return Plugin_Handled;
-	}
+	if ( !client ) return Plugin_Handled;
 	
 	if ( !g_bIsLoaded[RUN_MAIN] )
 	{
-		PRINTCHAT( client, client, CHAT_PREFIX ... "This map doesn't have zones! No records can be found." );
+		PRINTCHAT( client, client, CHAT_PREFIX..."This map doesn't have zones! No records can be found." );
+		return Plugin_Handled;
+	}
+	
+	if ( IsSpamming( client ) )
+	{
+		PRINTCHAT( client, client, CHAT_PREFIX..."Please wait before using this command again, thanks." );
+		return Plugin_Handled;
+	}
+	
+	if ( !args )
+	{
+		DB_PrintRecords( client, false );
 		return Plugin_Handled;
 	}
 	
 	
-	DB_PrintRecords( client, false );
+	PrintRecords( client, false, args );
 	
 	return Plugin_Handled;
 }
 
 public Action Command_RecordsPrint( int client, int args )
 {
-	if ( client == INVALID_INDEX ) return Plugin_Handled;
+	if ( !client ) return Plugin_Handled;
 	
 	if ( !g_bIsLoaded[RUN_MAIN] )
 	{
-		PRINTCHAT( client, client, CHAT_PREFIX ... "This map doesn't have zones! No records can be found." );
+		PRINTCHAT( client, client, CHAT_PREFIX..."This map doesn't have zones! No records can be found." );
+		return Plugin_Handled;
+	}
+	
+	if ( IsSpamming( client ) )
+	{
+		PRINTCHAT( client, client, CHAT_PREFIX..."Please wait before using this command again, thanks." );
+		return Plugin_Handled;
+	}
+	
+	if ( !args )
+	{
+		DB_PrintRecords( client, true );
 		return Plugin_Handled;
 	}
 	
 	
-	if ( args < 1 ) DB_PrintRecords( client, true );
-	else
-	{
-		char szArg[12];
-		GetCmdArgString( szArg, sizeof( szArg ) );
-		
-		StripQuotes( szArg );
-		
-		
-		if ( StrEqual( szArg, "b", false ) || StrEqual( szArg, "b1", false ) || StrEqual( szArg, "bonus1", false ) )
-		{
-			if ( !g_bZoneExists[RUN_BONUS_1] )
-			{
-				PRINTCHATV( client, client, CHAT_PREFIX ... "\x03%s"...CLR_TEXT..." records do not exist!", g_szRunName[NAME_LONG][RUN_BONUS_1] );
-				return Plugin_Handled;
-			}
-			
-			DB_PrintRecords( client, true, STYLE_NORMAL, RUN_BONUS_1 );
-		}
-		else if ( StrEqual( szArg, "b2", false ) || StrEqual( szArg, "bonus2", false ) )
-		{
-			if ( !g_bZoneExists[RUN_BONUS_2] )
-			{
-				PRINTCHATV( client, client, CHAT_PREFIX ... "\x03%s"...CLR_TEXT..." records do not exist!", g_szRunName[NAME_LONG][RUN_BONUS_2] );
-				return Plugin_Handled;
-			}
-			
-			DB_PrintRecords( client, true, STYLE_NORMAL, RUN_BONUS_2 );
-		}
-		else if ( StrEqual( szArg, "normal", false ) || StrEqual( szArg, "n", false ) )
-		{
-			DB_PrintRecords( client, true, STYLE_NORMAL );
-		}
-		else if ( StrEqual( szArg, "sideways", false ) || StrEqual( szArg, "sw", false ) )
-		{
-			DB_PrintRecords( client, true, STYLE_SIDEWAYS );
-		}
-		else if ( StrEqual( szArg, "w-only", false ) || StrEqual( szArg, "w", false ) )
-		{
-			DB_PrintRecords( client, true, STYLE_W );
-		}
-		else if ( StrEqual( szArg, "vel", false ) || StrEqual( szArg, "v", false ) || StrEqual( szArg, "400", false ) || StrEqual( szArg, "400vel", false ) || StrEqual( szArg, "400v", false ) )
-		{
-			DB_PrintRecords( client, true, STYLE_VEL );
-		}
-	}
+	PrintRecords( client, true, args );
+	
 	
 	return Plugin_Handled;
 }
 
+stock void PrintRecords( int client, bool bInConsole, int args )
+{
+	// Go through every argument the player gave and try to interpret what they want.	
+	int run = 0;
+	int style = -1;
+	int mode = -1;
+	
+	char szArg[12];
+	int type;
+	int num;
+	
+	for ( int i = 1; i <= args; i++ )
+	{
+		GetCmdArg( i, szArg, sizeof( szArg ) );
+		StripQuotes( szArg );
+		
+		if ( !strlen( szArg ) ) continue;
+		
+		
+		ParseRecordString( szArg, type, num );
+		
+		switch ( type )
+		{
+			// Invalid argument.
+			case RECORDTYPE_ERROR : continue;
+			
+			case RECORDTYPE_RUN : run = num;
+			case RECORDTYPE_STYLE : style = num;
+			case RECORDTYPE_MODE : mode = num;
+		}
+	}
+	
+	DB_PrintRecords( client, bInConsole, run, style, mode );
+}
+
 public Action Command_Style_Normal( int client, int args )
 {
-	if ( client == INVALID_INDEX ) return Plugin_Handled;
+	if ( !client ) return Plugin_Handled;
 	
 	
 	SetPlayerStyle( client, STYLE_NORMAL );
@@ -281,19 +275,19 @@ public Action Command_Style_Normal( int client, int args )
 	return Plugin_Handled;
 }
 
-public Action Command_Style_Sideways( int client, int args )
+public Action Command_Style_SW( int client, int args )
 {
-	if ( client == INVALID_INDEX ) return Plugin_Handled;
+	if ( !client ) return Plugin_Handled;
 	
 	
-	SetPlayerStyle( client, STYLE_SIDEWAYS );
+	SetPlayerStyle( client, STYLE_SW );
 	
 	return Plugin_Handled;
 }
 
 public Action Command_Style_W( int client, int args )
 {
-	if ( client == INVALID_INDEX ) return Plugin_Handled;
+	if ( !client ) return Plugin_Handled;
 	
 	
 	SetPlayerStyle( client, STYLE_W );
@@ -303,7 +297,7 @@ public Action Command_Style_W( int client, int args )
 
 public Action Command_Style_HSW( int client, int args )
 {
-	if ( client == INVALID_INDEX ) return Plugin_Handled;
+	if ( !client ) return Plugin_Handled;
 	
 	
 	SetPlayerStyle( client, STYLE_HSW );
@@ -313,27 +307,17 @@ public Action Command_Style_HSW( int client, int args )
 
 public Action Command_Style_RealHSW( int client, int args )
 {
-	if ( client == INVALID_INDEX ) return Plugin_Handled;
+	if ( !client ) return Plugin_Handled;
 	
 	
-	SetPlayerStyle( client, STYLE_REAL_HSW );
+	SetPlayerStyle( client, STYLE_RHSW );
 
-	return Plugin_Handled;
-}
-
-public Action Command_Style_VelCap( int client, int args )
-{
-	if ( client == INVALID_INDEX ) return Plugin_Handled;
-	
-	
-	SetPlayerStyle( client, STYLE_VEL );
-	
 	return Plugin_Handled;
 }
 
 public Action Command_Style_AD( int client, int args )
 {
-	if ( client == INVALID_INDEX ) return Plugin_Handled;
+	if ( !client ) return Plugin_Handled;
 	
 	
 	SetPlayerStyle( client, STYLE_A_D );
@@ -341,143 +325,173 @@ public Action Command_Style_AD( int client, int args )
 	return Plugin_Handled;
 }
 
+public Action Command_Mode_Auto( int client, int args )
+{
+	if ( !client ) return Plugin_Handled;
+	
+	if ( !IsAllowedMode( MODE_AUTO ) )
+	{
+		PRINTCHAT( client, client, CHAT_PREFIX..."This mode is not allowed!" );
+		return Plugin_Handled;
+	}
+	
+	
+	TeleportPlayerToStart( client );
+	
+	SetPlayerMode( client, MODE_AUTO );
+	
+	return Plugin_Handled;
+}
+
+public Action Command_Mode_Scroll( int client, int args )
+{
+	if ( !client ) return Plugin_Handled;
+	
+	if ( !IsAllowedMode( MODE_SCROLL ) )
+	{
+		PRINTCHAT( client, client, CHAT_PREFIX..."This mode is not allowed!" );
+		return Plugin_Handled;
+	}
+	
+	
+	TeleportPlayerToStart( client );
+	
+	SetPlayerMode( client, MODE_SCROLL );
+	
+	return Plugin_Handled;
+}
+
+public Action Command_Mode_VelCap( int client, int args )
+{
+	if ( !client ) return Plugin_Handled;
+	
+	if ( !IsAllowedMode( MODE_VELCAP ) )
+	{
+		PRINTCHAT( client, client, CHAT_PREFIX..."This mode is not allowed!" );
+		return Plugin_Handled;
+	}
+	
+	
+	TeleportPlayerToStart( client );
+	
+	SetPlayerMode( client, MODE_VELCAP );
+	
+	return Plugin_Handled;
+}
+
 public Action Command_Practise( int client, int args )
 {
-	if ( client == INVALID_INDEX ) return Plugin_Handled;
+	if ( !client ) return Plugin_Handled;
 	
 	if ( !IsPlayerAlive( client ) )
 	{
-		PRINTCHAT( client, client, CHAT_PREFIX ... "You must be alive to use this command!" );
+		PRINTCHAT( client, client, CHAT_PREFIX..."You must be alive to use this command!" );
 		return Plugin_Handled;
 	}
 	
-	if ( IsSpamming( client ) )
-	{
-		PRINTCHAT( client, client, CHAT_PREFIX ... "Please wait before using this command again, thanks." );
-		return Plugin_Handled;
-	}
-	
-	
-	g_bIsClientPractising[client] = !g_bIsClientPractising[client];
-	
-	if ( g_bIsClientPractising[client] )
-	{
-		PRINTCHAT( client, client, CHAT_PREFIX ... "You're now in \x03practice"...CLR_TEXT..." mode! Type \x03!prac"...CLR_TEXT..." to toggle." );
-	}
-	else
-	{
-		if ( !g_bIsLoaded[ g_iClientRun[client] ] )
-		{
-			PRINTCHAT( client, client, CHAT_PREFIX ... "Cannot set your mode back to practice!" );
-			return Plugin_Handled;
-		}
-		
-		PRINTCHAT( client, client, CHAT_PREFIX ... "You're now in \x03normal"...CLR_TEXT..." running mode!" );
-		
-		TeleportPlayerToStart( client );
-		
-		SetEntityMoveType( client, MOVETYPE_WALK );
-	}
-	
-#if defined RECORD
-	g_bClientRecording[client] = false;
-	
-	if ( g_hClientRecording[client] != null )
-	{
-		delete g_hClientRecording[client];
-		g_hClientRecording[client] = null;
-	}
-#endif
+	SetPlayerPractice( client, !g_bClientPractising[client] );
 	
 	return Plugin_Handled;
 }
 
 public Action Command_Practise_SavePoint( int client, int args )
 {
-	if ( client == INVALID_INDEX ) return Plugin_Handled;
+	if ( !client ) return Plugin_Handled;
 	
-	if ( !g_bIsClientPractising[client] )
+	if ( g_hClientPracData[client] == null || !g_bClientPractising[client] )
 	{
-		PRINTCHAT( client, client, CHAT_PREFIX ... "You have to be in \x03practice"...CLR_TEXT..." mode! (\x03!prac"...CLR_TEXT...")" );
+		PRINTCHAT( client, client, CHAT_PREFIX..."You have to be in "...CLR_TEAM..."practice"...CLR_TEXT..." mode! ("...CLR_TEAM..."!prac"...CLR_TEXT...")" );
 		return Plugin_Handled;
 	}
 	
 	if ( !IsPlayerAlive( client ) )
 	{
-		PRINTCHAT( client, client, CHAT_PREFIX ... "You must be alive to use this command!" );
+		PRINTCHAT( client, client, CHAT_PREFIX..."You must be alive to use this command!" );
 		return Plugin_Handled;
 	}
 	
 	
-	g_iClientCurSave[client]++;
-	
-	if ( g_iClientCurSave[client] >= PRAC_MAX_SAVES )
+	if ( ++g_iClientCurSave[client] >= PRAC_MAX_SAVES )
 	{
 		g_iClientCurSave[client] = 0;
 	}
 	
+	int iData[PRAC_SIZE];
+	
 	// Save the difference instead of the the engine time. If you don't do that, multiple cps won't work correctly.
-	g_flClientSaveDif[client][ g_iClientCurSave[client] ] = GetEngineTime() - g_flClientStartTime[client];
+	iData[PRAC_TIMEDIF] = GetEngineTime() - g_flClientStartTime[client];
 	
-	GetClientEyeAngles( client, g_vecClientSaveAng[client][ g_iClientCurSave[client] ] );
-	GetClientAbsOrigin( client, g_vecClientSavePos[client][ g_iClientCurSave[client] ] );
-	GetEntPropVector( client, Prop_Data, "m_vecAbsVelocity", g_vecClientSaveVel[client][ g_iClientCurSave[client] ] );
 	
-	PRINTCHAT( client, client, CHAT_PREFIX ... "Saved location!" );
+	
+	float vecTemp[3];
+	GetClientAbsOrigin( client, vecTemp );
+	ArrayCopy( vecTemp, iData[PRAC_POS], 3 );
+	
+	GetClientEyeAngles( client, vecTemp );
+	ArrayCopy( vecTemp, iData[PRAC_ANG], 2 );
+	
+	GetEntPropVector( client, Prop_Data, "m_vecAbsVelocity", vecTemp );
+	ArrayCopy( vecTemp, iData[PRAC_VEL], 3 );
+	
+	// If our checkpoints exceeded the max number. Now we override.
+	if ( g_hClientPracData[client].Length >= PRAC_MAX_SAVES )
+	{
+		g_hClientPracData[client].SetArray( g_iClientCurSave[client], iData, view_as<int>( PracData ) );
+	}
+	else
+	{
+		g_hClientPracData[client].PushArray( iData, view_as<int>( PracData ) );
+	}
+	
+	
+	PRINTCHAT( client, client, CHAT_PREFIX..."Saved location!" );
 	
 	return Plugin_Handled;
 }
 
 public Action Command_Practise_GotoLastPoint( int client, int args )
 {
-	if ( client == INVALID_INDEX ) return Plugin_Handled;
+	if ( !client ) return Plugin_Handled;
 	
-	if ( !g_bIsClientPractising[client] )
+	if ( g_hClientPracData[client] == null || !g_bClientPractising[client] )
 	{
-		PRINTCHAT( client, client, CHAT_PREFIX ... "You have to be in \x03practice"...CLR_TEXT..." mode! (\x03!prac"...CLR_TEXT...")" );
+		PRINTCHAT( client, client, CHAT_PREFIX..."You have to be in "...CLR_TEAM..."practice"...CLR_TEXT..." mode! ("...CLR_TEAM..."!prac"...CLR_TEXT...")" );
 		return Plugin_Handled;
 	}
 	
 	if ( !IsPlayerAlive( client ) )
 	{
-		PRINTCHAT( client, client, CHAT_PREFIX ... "You must be alive to use this command!" );
+		PRINTCHAT( client, client, CHAT_PREFIX..."You must be alive to use this command!" );
 		return Plugin_Handled;
 	}
 	
-	if ( g_iClientCurSave[client] == -1 || g_flClientSaveDif[client][ g_iClientCurSave[client] ] == TIME_INVALID )
+	if ( !g_hClientPracData[client].Length || g_iClientCurSave[client] == INVALID_SAVE )
 	{
-		PRINTCHAT( client, client, CHAT_PREFIX ... "You must save a location first! (\x03!save"...CLR_TEXT...")" );
+		PRINTCHAT( client, client, CHAT_PREFIX..."You must save a location first! ("...CLR_TEAM..."!save"...CLR_TEXT...")" );
 		return Plugin_Handled;
 	}
 	
 	
-	// A valid save!
-	g_flClientStartTime[client] = GetEngineTime() - g_flClientSaveDif[client][ g_iClientCurSave[client] ];
-	
-	TeleportEntity( client, g_vecClientSavePos[client][ g_iClientCurSave[client] ], g_vecClientSaveAng[client][ g_iClientCurSave[client] ], g_vecClientSaveVel[client][ g_iClientCurSave[client] ] );
+	TeleportToSavePoint( client, g_iClientCurSave[client] );
 
 	return Plugin_Handled;
 }
 
 public Action Command_Practise_Noclip( int client, int args )
 {
-	if ( client == INVALID_INDEX ) return Plugin_Handled;
+	if ( !client ) return Plugin_Handled;
 	
 	if ( !IsPlayerAlive( client ) )
 	{
-		PRINTCHAT( client, client, CHAT_PREFIX ... "You must be alive to use this command!" );
+		PRINTCHAT( client, client, CHAT_PREFIX..."You must be alive to use this command!" );
 		return Plugin_Handled;
 	}
 	
 	
 	if ( GetEntityMoveType( client ) == MOVETYPE_WALK )
 	{	
-		if ( !g_bIsClientPractising[client] )
-		{
-			g_bIsClientPractising[client] = true;
-			
-			PRINTCHAT( client, client, CHAT_PREFIX ... "You're now in \x03practice"...CLR_TEXT..." mode! Type \x03!prac"...CLR_TEXT..." to toggle." );
-		}
+		if ( !g_bClientPractising[client] )
+			SetPlayerPractice( client, true );
 		
 		SetEntityMoveType( client, MOVETYPE_NOCLIP );
 	}
@@ -488,67 +502,29 @@ public Action Command_Practise_Noclip( int client, int args )
 
 public Action Command_Run_Bonus( int client, int args )
 {
-	if ( client == INVALID_INDEX ) return Plugin_Handled;
+	if ( !client ) return Plugin_Handled;
 	
-	if ( IsSpamming( client ) )
+	if ( !args )
 	{
-		PRINTCHAT( client, client, CHAT_PREFIX ... "Please wait before using this command again, thanks." );
+		if ( !g_bIsLoaded[RUN_BONUS1] && g_bIsLoaded[RUN_BONUS2] )
+			SetPlayerRun( client, RUN_BONUS2 );
+		else
+			SetPlayerRun( client, RUN_BONUS1 );
+		
 		return Plugin_Handled;
 	}
 	
-	
-	if ( args == 0 )
-	{
-		if ( !g_bIsLoaded[RUN_BONUS_1] )
-		{
-			PRINTCHATV( client, client, CHAT_PREFIX ... "This map doesn't have \x03%s"...CLR_TEXT..."!", g_szRunName[NAME_LONG][RUN_BONUS_1] );
-			return Plugin_Handled;
-		}
-	
-		
-		g_iClientRun[client] = RUN_BONUS_1;
-	
-		TeleportPlayerToStart( client );
-		UpdateScoreboard( client );
-		
-		PRINTCHATV( client, client, CHAT_PREFIX ... "You are now in \x03%s"...CLR_TEXT..."! Use \x03!main"...CLR_TEXT..." to go back.", g_szRunName[NAME_LONG][ g_iClientRun[client] ] );
-		return Plugin_Handled;
-	}
-	
-	char szArg[2];
+	char szArg[5];
 	GetCmdArgString( szArg, sizeof( szArg ) );
+	StripQuotes( szArg );
 	
 	if ( szArg[0] == '1' )
 	{
-		if ( !g_bIsLoaded[RUN_BONUS_1] )
-		{
-			PRINTCHATV( client, client, CHAT_PREFIX ... "This map doesn't have \x03%s"...CLR_TEXT..."!", g_szRunName[NAME_LONG][RUN_BONUS_1] );
-			return Plugin_Handled;
-		}
-		
-		
-		g_iClientRun[client] = RUN_BONUS_1;
-	
-		TeleportPlayerToStart( client );
-		UpdateScoreboard( client );
-		
-		PRINTCHATV( client, client, CHAT_PREFIX ... "You are now in \x03%s"...CLR_TEXT..."! Use \x03!main"...CLR_TEXT..." to go back.", g_szRunName[NAME_LONG][ g_iClientRun[client] ] );
+		SetPlayerRun( client, RUN_BONUS1 );
 	}
 	else if ( szArg[0] == '2' )
 	{
-		if ( !g_bIsLoaded[RUN_BONUS_2] )
-		{
-			PRINTCHATV( client, client, CHAT_PREFIX ... "This map doesn't have \x03%s"...CLR_TEXT..."!", g_szRunName[NAME_LONG][ RUN_BONUS_2 ] );
-			return Plugin_Handled;
-		}
-		
-		
-		g_iClientRun[client] = RUN_BONUS_2;
-	
-		TeleportPlayerToStart( client );
-		UpdateScoreboard( client );
-		
-		PRINTCHATV( client, client, CHAT_PREFIX ... "You are now in \x03%s"...CLR_TEXT..."! Use \x03!main"...CLR_TEXT..." to go back.", g_szRunName[NAME_LONG][ g_iClientRun[client] ] );
+		SetPlayerRun( client, RUN_BONUS2 );
 	}
 	
 	return Plugin_Handled;
@@ -556,81 +532,27 @@ public Action Command_Run_Bonus( int client, int args )
 
 public Action Command_Run_Main( int client, int args )
 {
-	if ( client == INVALID_INDEX ) return Plugin_Handled;
+	if ( !client ) return Plugin_Handled;
 	
-	if ( !g_bIsLoaded[RUN_MAIN] )
-	{
-		PRINTCHATV( client, client, CHAT_PREFIX ... "This map doesn't have \x03%s"...CLR_TEXT..."!", g_szRunName[NAME_LONG][RUN_MAIN] );
-		return Plugin_Handled;
-	}
-	
-	if ( IsSpamming( client ) )
-	{
-		PRINTCHAT( client, client, CHAT_PREFIX ... "Please wait before using this command again, thanks." );
-		return Plugin_Handled;
-	}
-	
-	
-	g_iClientRun[client] = RUN_MAIN;
-	
-	TeleportPlayerToStart( client );
-	UpdateScoreboard( client );
-	
-	PRINTCHATV( client, client, CHAT_PREFIX ... "You are now in \x03%s"...CLR_TEXT..."!", g_szRunName[NAME_LONG][ g_iClientRun[client] ] );
+	SetPlayerRun( client, RUN_MAIN );
 	
 	return Plugin_Handled;
 }
 
-public Action Command_Run_Bonus_1( int client, int args )
+public Action Command_Run_Bonus1( int client, int args )
 {
-	if ( client == INVALID_INDEX ) return Plugin_Handled;
+	if ( !client ) return Plugin_Handled;
 	
-	if ( !g_bIsLoaded[RUN_BONUS_1] )
-	{
-		PRINTCHATV( client, client, CHAT_PREFIX ... "This map doesn't have \x03%s"...CLR_TEXT..."!", g_szRunName[NAME_LONG][RUN_BONUS_1] );
-		return Plugin_Handled;
-	}
-	
-	if ( IsSpamming( client ) )
-	{
-		PRINTCHAT( client, client, CHAT_PREFIX ... "Please wait before using this command again, thanks." );
-		return Plugin_Handled;
-	}
-	
-	
-	g_iClientRun[client] = RUN_BONUS_1;
-	
-	TeleportPlayerToStart( client );
-	UpdateScoreboard( client );
-	
-	PRINTCHATV( client, client, CHAT_PREFIX ... "You are now in \x03%s"...CLR_TEXT..."!", g_szRunName[NAME_LONG][ g_iClientRun[client] ] );
+	SetPlayerRun( client, RUN_BONUS1 );
 	
 	return Plugin_Handled;
 }
 
-public Action Command_Run_Bonus_2( int client, int args )
+public Action Command_Run_Bonus2( int client, int args )
 {
-	if ( client == INVALID_INDEX ) return Plugin_Handled;
+	if ( !client ) return Plugin_Handled;
 	
-	if ( !g_bIsLoaded[RUN_BONUS_2] )
-	{
-		PRINTCHATV( client, client, CHAT_PREFIX ... "This map doesn't have \x03%s"...CLR_TEXT..."!", g_szRunName[NAME_LONG][RUN_BONUS_2] );
-		return Plugin_Handled;
-	}
-	
-	if ( IsSpamming( client ) )
-	{
-		PRINTCHAT( client, client, CHAT_PREFIX ... "Please wait before using this command again, thanks." );
-		return Plugin_Handled;
-	}
-	
-	
-	g_iClientRun[client] = RUN_BONUS_2;
-	
-	TeleportPlayerToStart( client );
-	UpdateScoreboard( client );
-	
-	PRINTCHATV( client, client, CHAT_PREFIX ... "You are now in \x03%s"...CLR_TEXT..."!", g_szRunName[NAME_LONG][ g_iClientRun[client] ] );
+	SetPlayerRun( client, RUN_BONUS2 );
 	
 	return Plugin_Handled;
 }
