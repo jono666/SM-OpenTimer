@@ -2,7 +2,7 @@ OpenTimer (Read this!)
 ============
 
 SourceMod timer plugin for *CSS* and *CS:GO* bunnyhop servers. Yes, it is free as in freedom.
-Test it out @ 98.166.119.99:27016 (CSS)
+Test it out @ 98.166.83.179:27016 (CSS)
 
 The plugin is written in new syntax which requires **SourceMod version 1.7**!
 
